@@ -106,14 +106,17 @@ def det2json(dataset, results):
     for idx in range(len(dataset)):
         img_id = dataset.img_ids[idx]
         result = results[idx]
+        F = open('./txtresults/'+str(img_id)+'.txt', 'w')
         for label in range(len(result)):
             bboxes = result[label]
             for i in range(bboxes.shape[0]):
                 data = dict()
+                xywh = xyxy2xywh(bboxes[i])
                 data['image_id'] = img_id
                 data['bbox'] = xyxy2xywh(bboxes[i])
                 data['score'] = float(bboxes[i][4])
                 data['category_id'] = dataset.cat_ids[label]
+                F.write('{},{},{},{},{},{},{},{}\n'.format(xywh[0], xywh[1], xywh[2], xywh[3], float(bboxes[i][4]), dataset.cat_ids[label], 0, 0))
                 json_results.append(data)
     return json_results
 

@@ -5,7 +5,7 @@ from .dataset_wrappers import ConcatDataset, RepeatDataset
 from .registry import DATASETS
 
 
-def _concat_dataset(cfg, default_args=None):
+def _concat_dataset(cfg):
     ann_files = cfg['ann_file']
     img_prefixes = cfg.get('img_prefix', None)
     seg_prefixes = cfg.get('seg_prefixes', None)
@@ -22,18 +22,17 @@ def _concat_dataset(cfg, default_args=None):
             data_cfg['seg_prefix'] = seg_prefixes[i]
         if isinstance(proposal_files, (list, tuple)):
             data_cfg['proposal_file'] = proposal_files[i]
-        datasets.append(build_dataset(data_cfg, default_args))
+        datasets.append(build_dataset(data_cfg))
 
     return ConcatDataset(datasets)
 
 
-def build_dataset(cfg, default_args=None):
+def build_dataset(cfg):
     if cfg['type'] == 'RepeatDataset':
-        dataset = RepeatDataset(
-            build_dataset(cfg['dataset'], default_args), cfg['times'])
+        dataset = RepeatDataset(build_dataset(cfg['dataset']), cfg['times'])
     elif isinstance(cfg['ann_file'], (list, tuple)):
-        dataset = _concat_dataset(cfg, default_args)
+        dataset = _concat_dataset(cfg)
     else:
-        dataset = build_from_cfg(cfg, DATASETS, default_args)
+        dataset = build_from_cfg(cfg, DATASETS)
 
     return dataset

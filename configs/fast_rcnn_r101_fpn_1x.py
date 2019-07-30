@@ -25,7 +25,7 @@ model = dict(
         in_channels=256,
         fc_out_channels=1024,
         roi_feat_size=7,
-        num_classes=81,
+        num_classes=7,
         target_means=[0., 0., 0., 0.],
         target_stds=[0.1, 0.1, 0.2, 0.2],
         reg_class_agnostic=False,
@@ -119,6 +119,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
+evaluation = dict(interval=500)
 total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
